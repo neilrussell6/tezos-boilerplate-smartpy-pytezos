@@ -1,0 +1,28 @@
+# Python
+__pycache__
+venv
+
+# Python : testing
+pytest.ini
+.pytest_cache
+
+# Node
+/node_modules
+
+# Granary
+.granary
+granary.json
+
+# IDE
+.idea
+
+# Contracts
+contracts/**/compiled
+contracts/**/*.json
+contracts/**/*.smlse
+
+# dependencies
+vendor
+
+# env
+.env.test

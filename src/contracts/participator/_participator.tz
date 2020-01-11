@@ -1,0 +1,108 @@
+parameter (or (address %add_participant) (unit %participate));
+storage   (pair (address %owner) (big_map %participants address mutez));
+code
+  {
+    DUP;        # pair(params, storage).pair(params, storage)
+    CDR;        # storage.pair(params, storage)
+    SWAP;       # pair(params, storage).storage
+    CAR;        # params.storage
+    IF_LEFT
+      {
+        # Entry point: add_participant # params.storage
+        # sp.verify(sp.sender == self.data.owner, message = 'ERROR_ONLY_OWNER_CAN_ADD_PARTICIPANT') # params.storage
+        SWAP;       # storage.params
+        DUP;        # storage.storage.params
+        DUG 2;      # storage.params.storage
+        CAR;        # address.params.storage
+        SENDER;     # address.address.params.storage
+        COMPARE;    # int.params.storage
+        EQ;         # bool.params.storage
+        IF
+          {}
+          {
+            PUSH string "ERROR_ONLY_OWNER_CAN_ADD_PARTICIPANT"; # string.params.storage
+            FAILWITH;   # FAILED
+          }; # params.storage
+        # sp.verify(~ (self.data.participants.contains(params)), message = 'ERROR_CANNOT_ADD_DUPLICATE_PARTICIPANT') # params.storage
+        SWAP;       # storage.params
+        DUP;        # storage.storage.params
+        DUG 2;      # storage.params.storage
+        CDR;        # big_map address mutez.params.storage
+        SWAP;       # params.big_map address mutez.storage
+        DUP;        # params.params.big_map address mutez.storage
+        DUG 2;      # params.big_map address mutez.params.storage
+        MEM;        # bool.params.storage
+        NOT;        # bool.params.storage
+        IF
+          {}
+          {
+            PUSH string "ERROR_CANNOT_ADD_DUPLICATE_PARTICIPANT"; # string.params.storage
+            FAILWITH;   # FAILED
+          }; # params.storage
+        # self.data.participants[params] = sp.amount # params.storage
+        SWAP;       # storage.params
+        DUP;        # storage.storage.params
+        DUG 2;      # storage.params.storage
+        DUP;        # storage.storage.params.storage
+        CDR;        # big_map address mutez.storage.params.storage
+        AMOUNT;     # mutez.big_map address mutez.storage.params.storage
+        SOME;       # option mutez.big_map address mutez.storage.params.storage
+        DIG 3;      # params.option mutez.big_map address mutez.storage.storage
+        DUP;        # params.params.option mutez.big_map address mutez.storage.storage
+        DUG 4;      # params.option mutez.big_map address mutez.storage.params.storage
+        UPDATE;     # big_map address mutez.storage.params.storage
+        SWAP;       # storage.big_map address mutez.params.storage
+        CAR;        # address.big_map address mutez.params.storage
+        PAIR;       # pair address (big_map address mutez).params.storage
+        DUG 2;      # params.storage.pair address (big_map address mutez)
+        DROP;       # storage.pair address (big_map address mutez)
+        DROP;       # pair address (big_map address mutez)
+      }
+      {
+        # Entry point: participate # params.storage
+        # sp.verify(self.data.participants.contains(sp.sender), message = 'ERROR_ONLY_REGISTERED_PARTICIPANTS_CAN_PARTICIPATE') # params.storage
+        SWAP;       # storage.params
+        DUP;        # storage.storage.params
+        DUG 2;      # storage.params.storage
+        CDR;        # big_map address mutez.params.storage
+        SENDER;     # address.big_map address mutez.params.storage
+        MEM;        # bool.params.storage
+        IF
+          {}
+          {
+            PUSH string "ERROR_ONLY_REGISTERED_PARTICIPANTS_CAN_PARTICIPATE"; # string.params.storage
+            FAILWITH;   # FAILED
+          }; # params.storage
+        # self.data.participants[sp.sender] += sp.amount # params.storage
+        SWAP;       # storage.params
+        DUP;        # storage.storage.params
+        DUG 2;      # storage.params.storage
+        DUP;        # storage.storage.params.storage
+        CDR;        # big_map address mutez.storage.params.storage
+        AMOUNT;     # mutez.big_map address mutez.storage.params.storage
+        DIG 2;      # storage.mutez.big_map address mutez.params.storage
+        DUP;        # storage.storage.mutez.big_map address mutez.params.storage
+        DUG 3;      # storage.mutez.big_map address mutez.storage.params.storage
+        CDR;        # big_map address mutez.mutez.big_map address mutez.storage.params.storage
+        SENDER;     # address.big_map address mutez.mutez.big_map address mutez.storage.params.storage
+        GET;        # option mutez.mutez.big_map address mutez.storage.params.storage
+        IF_SOME
+          {}
+          {
+            PUSH unit Unit; # unit.mutez.big_map address mutez.storage.params.storage
+            FAILWITH;   # FAILED
+          }; # mutez.mutez.big_map address mutez.storage.params.storage
+        ADD;        # mutez.big_map address mutez.storage.params.storage
+        SOME;       # option mutez.big_map address mutez.storage.params.storage
+        SENDER;     # address.option mutez.big_map address mutez.storage.params.storage
+        UPDATE;     # big_map address mutez.storage.params.storage
+        SWAP;       # storage.big_map address mutez.params.storage
+        CAR;        # address.big_map address mutez.params.storage
+        PAIR;       # pair address (big_map address mutez).params.storage
+        DUG 2;      # params.storage.pair address (big_map address mutez)
+        DROP;       # storage.pair address (big_map address mutez)
+        DROP;       # pair address (big_map address mutez)
+      }; # pair address (big_map address mutez)
+    NIL operation; # list operation.pair address (big_map address mutez)
+    PAIR;       # pair (list operation) (pair address (big_map address mutez))
+  } # pair (list operation) (pair address (big_map address mutez))

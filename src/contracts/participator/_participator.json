@@ -1,0 +1,35 @@
+[
+{"prim":"storage","args":[
+ {"prim":"pair","args":[
+  {"prim":"address","annots":["%owner"]},
+  {"prim":"big_map","args":[
+   {"prim":"address"},{"prim":"mutez"}]
+  ,"annots":["%participants"]}]
+ }]
+},
+{"prim":"parameter","args":[
+ {"prim":"or","args":[
+  {"prim":"address","annots":["%add_participant"]},{"prim":"unit","annots":["%participate"]}]
+ }]
+},
+{"prim":"code","args":[
+ [{"prim":"DUP"},{"prim":"CDR"},{"prim":"SWAP"},{"prim":"CAR"},
+ {"prim":"IF_LEFT","args":[
+  [[{"prim":"SWAP"},{"prim":"DUP"},{"prim":"DUG","args":[{"int":"2"}]},{"prim":"CAR"},{"prim":"SENDER"},{"prim":"COMPARE"},{"prim":"EQ"},
+  {"prim":"IF","args":[
+   [[]],[[{"prim":"PUSH","args":[{"prim":"string"},{"string":"ERROR_ONLY_OWNER_CAN_ADD_PARTICIPANT"}]},{"prim":"FAILWITH"}]]]
+  },{"prim":"SWAP"},{"prim":"DUP"},{"prim":"DUG","args":[{"int":"2"}]},{"prim":"CDR"},{"prim":"SWAP"},{"prim":"DUP"},{"prim":"DUG","args":[{"int":"2"}]},{"prim":"MEM"},{"prim":"NOT"},
+  {"prim":"IF","args":[
+   [[]],[[{"prim":"PUSH","args":[{"prim":"string"},{"string":"ERROR_CANNOT_ADD_DUPLICATE_PARTICIPANT"}]},{"prim":"FAILWITH"}]]]
+  },{"prim":"SWAP"},{"prim":"DUP"},{"prim":"DUG","args":[{"int":"2"}]},{"prim":"DUP"},{"prim":"CDR"},{"prim":"AMOUNT"},{"prim":"SOME"},{"prim":"DIG","args":[{"int":"3"}]},{"prim":"DUP"},{"prim":"DUG","args":[{"int":"4"}]},{"prim":"UPDATE"},{"prim":"SWAP"},{"prim":"CAR"},{"prim":"PAIR"},{"prim":"DUG","args":[{"int":"2"}]},{"prim":"DROP"},{"prim":"DROP"}]],[[{"prim":"SWAP"},{"prim":"DUP"},{"prim":"DUG","args":[{"int":"2"}]},{"prim":"CDR"},{"prim":"SENDER"},{"prim":"MEM"},
+  {"prim":"IF","args":[
+   [[]],[[{"prim":"PUSH","args":[{"prim":"string"},{"string":"ERROR_ONLY_REGISTERED_PARTICIPANTS_CAN_PARTICIPATE"}]},{"prim":"FAILWITH"}]]]
+  },{"prim":"SWAP"},{"prim":"DUP"},{"prim":"DUG","args":[{"int":"2"}]},{"prim":"DUP"},{"prim":"CDR"},{"prim":"AMOUNT"},{"prim":"DIG","args":[{"int":"2"}]},{"prim":"DUP"},{"prim":"DUG","args":[{"int":"3"}]},{"prim":"CDR"},{"prim":"SENDER"},{"prim":"GET"},
+  {"prim":"IF_NONE","args":[
+   [[{"prim":"PUSH","args":[{"prim":"unit"},{"prim":"Unit"}]},{"prim":"FAILWITH"}]],[[]]]
+  },{"prim":"ADD"},{"prim":"SOME"},{"prim":"SENDER"},{"prim":"UPDATE"},{"prim":"SWAP"},{"prim":"CAR"},{"prim":"PAIR"},{"prim":"DUG","args":[{"int":"2"}]},{"prim":"DROP"},{"prim":"DROP"}]]]
+ },
+ {"prim":"NIL","args":[
+  {"prim":"operation"}]
+ },{"prim":"PAIR"}]]
+}]
