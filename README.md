@@ -33,5 +33,3 @@ Additional Docs
 ---
 
  - [IDE Setup](docs/ide-intellij-python.md)
-
-1
