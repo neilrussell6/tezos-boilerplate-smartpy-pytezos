@@ -1,1 +1,1 @@
-"""Tezos smart contract testing playground"""
+"""Tezos SmartPy + PyTezos boilerplate"""

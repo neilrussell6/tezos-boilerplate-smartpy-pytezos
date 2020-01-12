@@ -9,10 +9,6 @@ pytest.ini
 # Node
 /node_modules
 
-# Granary
-.granary
-granary.json
-
 # IDE
 .idea
 
